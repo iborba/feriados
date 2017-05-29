@@ -33,12 +33,14 @@
 					<tr>
 						<th>Nome</th>
 						<th>Data</th>
+						<th>Dia da semana</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr data-ng-repeat="feriados in Feriados.result">
 						<td>{{ feriados.name | uppercase }}</td>
-						<td>{{ feriados.date | brDate }}</td>
+						<td>{{ feriados.date }}</td>
+						<td>{{ feriados.wkday | brDate }}</td>
 					</tr>
 				</tbody>
 			</table>
