@@ -1,8 +1,33 @@
 angular.module('FeriadosSantos', [])
 	.filter('brDate', function() {
 		return function(date) {
-			//INCOMPLETO
-			return date + " - SEGUNDA-FEIRA";
+			date = date.substring(0, 3);
+			
+			switch(date.toLowerCase()) {
+				case "sun":
+					date = "DOMINGO";
+					break;
+				case "mon":
+					date = "SEGUNDA-FEIRA";
+					break;
+				case "tue":
+					date = "TERÇA-FEIRA";
+					break;
+				case "wed":
+					date = "QUARTA-FEIRA";
+					break;
+				case "thu":
+					date = "QUINTA-FEIRA";
+					break;
+				case "fri":
+					date = "SEXTA-FEIRA";
+					break;
+				case "sat":
+					date = "SÁBADO";
+					break;
+			}
+			
+			return date;
 		};
 	})
 	.controller('FeriadosController', FeriadosController)
@@ -15,7 +40,7 @@ function FeriadosController() {
 	vm.data = [
 		{ name: "PÁSCOA", date: null, qtyDaysToEaster: 0 },
 		{ name: "CORPUS CHRISTI", date: null, qtyDaysToEaster: 60 },
-		{ name: "SEXTA-FEIRA DE ALELUIA", date: null, qtyDaysToEaster: -2},
+		{ name: "SEXTA-FEIRA SANTA", date: null, qtyDaysToEaster: -2},
 		{ name: "CARNAVAL", date: null, qtyDaysToEaster: -47 },
 		{ name: "ANO NOVO", date: '01-01-1900', qtyDaysToEaster: 0 },
 		{ name: "NATAL", date: '12-25-1900', qtyDaysToEaster: 0 }
@@ -24,34 +49,25 @@ function FeriadosController() {
 	vm.pesquisarFeriado = pesquisarFeriado;
 	function pesquisarFeriado(pAno){
         var dataPascoa;
-
-        var X = 24;
-        var Y = 5;
-        var a = pAno % 19;
-        var b = pAno % 4;
-        var c = pAno % 7;
-        var d = (19 * a + X) % 30;
-        var e = (2 * b + 4 * c + 6 * d + Y) % 7;
-
-        var f = d + e;
-        var dia;
-
-        if (f > 9)
-        {
-            dia = f - 9;
-
-            if (dia === 26 || (dia === 25 && d === 28 && a > 10))
-                dia -= 8;
-
-            dataPascoa = new Date(pAno, 3, dia, 1, 1);
-        }
-        else
-        {
-            dia = f - 23;
-            dataPascoa = new Date(pAno, 2, dia, 1, 1);
-        }
-		
+		vm.result = [];
+		//Algoritmo de Meeus/Jones/Butcher
+		var a = (pAno % 19);
+		var b = parseInt(pAno / 100);
+		var c = (pAno % 100);
+		var d = parseInt(b / 4);
+		var e = (b % 4);
+		var f = parseInt((b + 8) / 25);
+		var g = parseInt((b - f + 1) / 3);
+		var h = ((19 * a + b - d - g + 15) % 30);
+		var i = parseInt(c / 4);
+		var k = (c % 4);
+		var L = ((32 + 2 * e + 2 * i - h - k) % 7);
+		var m = parseInt((a + 11 * h + 22 * L) / 451);
+		var mes = parseInt((h + L - 7 * m + 114) / 31);
+		var dia = ((h + L - 7 * m + 114) % 31) + 1;
 		var data;
+		
+		dataPascoa = new Date(pAno, mes - 1, dia, 1, 1);
 		
 		for(var k in vm.data) {			
 			if (vm.data[k].qtyDaysToEaster === 0 && vm.data[k].date !== null)
@@ -65,7 +81,7 @@ function FeriadosController() {
 			else
 				data = dataPascoa;
 			
-			vm.result.push({name: angular.copy(vm.data[k].name), date: angular.copy(data.toLocaleDateString("pt-BR")) })
+			vm.result.push({name: angular.copy(vm.data[k].name), date: angular.copy(data.toLocaleDateString("pt-BR")), wkday: angular.copy(data.toGMTString("pt-BR")) })
 		}
 	}
 }
