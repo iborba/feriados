@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" data-ng-app="FeriadosSantos">
+	<head>
+		<title>{{ Feriados.title }}</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-filter/0.5.8/angular-filter.min.js"></script>
+		<script src="./js/feriados.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudfLare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+		<style type="text/css">
+			.wrapper { max-width: 600px; margin: 0 auto; }
+			.topspace { margin-top: 10px; }
+			.coluna { border: solid 1px; padding: 2px; text-align: center; }
+			.fontFibonacci { color: #fff; font-size: 80px; text-align: center; }
+			.separator { margin: 50px; }
+		</style>
+	</head>
+
+	<body>
+		<section data-ng-controller="FeriadosController as Feriados">
+		<h1>{{ Feriados.title }}</h1>
+			<input data-ng-model="ano" placeholder="ANO">
+
+<!-- 			<p>
+				<input type="text" data-ng-model="form.User.name" placeholder="USUÁRIO">
+				<br>
+				<input type="text" data-ng-model="form.User.email" placeholder="EMAIL">
+				<br>
+				<br>
+			</p>
+ -->
+			<button data-ng-click="Feriados.pesquisarFeriado(ano)" class="btn btn-large green waves-effect waves-light col s12">PESQUISAR</button>
+			<table border="1px">
+				<thead>
+					<tr>
+						<th>Nome</th>
+						<th>Data</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr data-ng-repeat="Feriados in Feriados.feriados | orderBy:Feriados.predicate:Feriados.reverse | filter:pesquisarFeriado ">
+						<td>{{ Feriados.name }}</td>
+						<td>{{ Feriados.data }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+	</body>
+</html>
