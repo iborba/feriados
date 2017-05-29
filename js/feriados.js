@@ -1,11 +1,26 @@
 angular.module('FeriadosSantos', [])
+	.filter('brDate', function() {
+		return function(date) {
+			//INCOMPLETO
+			return date + " - SEGUNDA-FEIRA";
+		};
+	})
 	.controller('FeriadosController', FeriadosController)
 	;
 
 function FeriadosController() {
 	var vm = this;
-	vm.title = "FERIADOS";
-
+	vm.title = "";
+	vm.result = [];
+	vm.data = [
+		{ name: "PÁSCOA", date: null, qtyDaysToEaster: 0 },
+		{ name: "CORPUS CHRISTI", date: null, qtyDaysToEaster: 60 },
+		{ name: "SEXTA-FEIRA DE ALELUIA", date: null, qtyDaysToEaster: -2},
+		{ name: "CARNAVAL", date: null, qtyDaysToEaster: -47 },
+		{ name: "ANO NOVO", date: '01-01-1900', qtyDaysToEaster: 0 },
+		{ name: "NATAL", date: '12-25-1900', qtyDaysToEaster: 0 }
+	]; //mongodb data
+	
 	vm.pesquisarFeriado = pesquisarFeriado;
 	function pesquisarFeriado(pAno){
         var dataPascoa;
@@ -25,34 +40,32 @@ function FeriadosController() {
         {
             dia = f - 9;
 
-            if (dia == 26 || (dia == 25 && d == 28 && a > 10))
-                dia -= 7;
+            if (dia === 26 || (dia === 25 && d === 28 && a > 10))
+                dia -= 8;
 
-            dataPascoa = new Date(pAno, 4, dia, 1, 1);
+            dataPascoa = new Date(pAno, 3, dia, 1, 1);
         }
         else
         {
-            dia = f - 22;
-            dataPascoa = new Date(pAno, 3, dia, 1, 1);
+            dia = f - 23;
+            dataPascoa = new Date(pAno, 2, dia, 1, 1);
         }
-        vm.feriados = { name:"PÁSCOA", date:dataPascoa };
-
+		
+		var data;
+		
+		for(var k in vm.data) {			
+			if (vm.data[k].qtyDaysToEaster === 0 && vm.data[k].date !== null)
+				data = new Date(pAno, new Date(vm.data[k].date).getMonth(), new Date(vm.data[k].date).getDate())
+			
+			else if (vm.data[k].qtyDaysToEaster !== 0 && vm.data[k].date === null)
+			{
+				data = angular.copy(dataPascoa);
+				data.setDate(data.getDate() + vm.data[k].qtyDaysToEaster);
+			}
+			else
+				data = dataPascoa;
+			
+			vm.result.push({name: angular.copy(vm.data[k].name), date: angular.copy(data.toLocaleDateString("pt-BR")) })
+		}
 	}
-
-	// vm.add = add;
-	// function add(user){
-	// 	vm.users.push(angular.copy(user)); //angular.copy é necessário, se for excluído, o campo é inserido inicialmente, passa a ser atualizado nos próximos clicks.
-	// }
-	
-	// vm.order = order;
-	// function order(key){
-	// 	vm.predicate = key;
-	// 	vm.reverse = !vm.reverse;
-	// }
-
-	// vm.remove = remove;
-	// function remove(pUsers){
-	// 	vm.users = pUsers.filter(function(el){ return !el.selecionado });
-	// }
-
 }
