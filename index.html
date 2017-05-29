@@ -9,14 +9,11 @@
 		<style type="text/css">
 			.wrapper { max-width: 600px; margin: 0 auto; }
 			.topspace { margin-top: 10px; }
-			.coluna { border: solid 1px; padding: 2px; text-align: center; }
-			.fontFibonacci { color: #fff; font-size: 80px; text-align: center; }
-			.separator { margin: 50px; }
 		</style>
 	</head>
 
 	<body>
-		<section data-ng-controller="FeriadosController as Feriados">
+		<section data-ng-controller="FeriadosController as Feriados" class="wrapper">
 		<h1>{{ Feriados.title }}</h1>
 			<input data-ng-model="ano" placeholder="ANO">
 
@@ -28,8 +25,10 @@
 				<br>
 			</p>
  -->
-			<button data-ng-click="Feriados.pesquisarFeriado(ano)" class="btn btn-large green waves-effect waves-light col s12">PESQUISAR</button>
-			<table border="1px">
+			<div>
+				<button data-ng-click="Feriados.pesquisarFeriado(ano)" class="btn btn-large green waves-effect waves-light col s12">PESQUISAR</button>
+			</div>
+			<table class="topspace">
 				<thead>
 					<tr>
 						<th>Nome</th>
@@ -37,9 +36,9 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr data-ng-repeat="Feriados in Feriados.feriados | orderBy:Feriados.predicate:Feriados.reverse | filter:pesquisarFeriado ">
-						<td>{{ Feriados.name }}</td>
-						<td>{{ Feriados.data }}</td>
+					<tr data-ng-repeat="feriados in Feriados.result">
+						<td>{{ feriados.name | uppercase }}</td>
+						<td>{{ feriados.date | brDate }}</td>
 					</tr>
 				</tbody>
 			</table>
