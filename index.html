@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en" data-ng-app="FeriadosSantos">
+<html lang="en" data-ng-app="HoliDays">
 	<head>
-		<title>{{ Feriados.title }}</title>
+		<title>{{ Holiday.title }}</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-filter/0.5.8/angular-filter.min.js"></script>
-		<script src="./js/feriados.js"></script>
+		<script src="./js/holidays.js"></script>
 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudfLare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
 		<style type="text/css">
 			.wrapper { max-width: 600px; margin: 0 auto; }
@@ -13,20 +13,17 @@
 	</head>
 
 	<body>
-		<section data-ng-controller="FeriadosController as Feriados" class="wrapper">
-		<h1>{{ Feriados.title }}</h1>
-			<input data-ng-model="ano" placeholder="ANO">
-
-<!-- 			<p>
-				<input type="text" data-ng-model="form.User.name" placeholder="USUÁRIO">
-				<br>
-				<input type="text" data-ng-model="form.User.email" placeholder="EMAIL">
-				<br>
-				<br>
-			</p>
- -->
+		<section data-ng-controller="HolidayController as Holiday" class="wrapper">
+			<h2>{{ Holiday.title }}</h2>
+			<input 
+				data-ng-model="year"
+				placeholder="ANO">
 			<div>
-				<button data-ng-click="Feriados.pesquisarFeriado(ano)" class="btn btn-large green waves-effect waves-light col s12">PESQUISAR</button>
+				<button 
+					class="btn btn-large green waves-effect waves-light col s12"
+					data-ng-click="Holiday.findHoliday(year)">
+						PESQUISAR
+				</button>
 			</div>
 			<table class="topspace">
 				<thead>
@@ -37,10 +34,10 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr data-ng-repeat="feriados in Feriados.result">
-						<td>{{ feriados.name | uppercase }}</td>
-						<td>{{ feriados.date }}</td>
-						<td>{{ feriados.wkday | brDate }}</td>
+					<tr data-ng-repeat="holiday in Holiday.result">
+						<td>{{ holiday.name | uppercase }}</td>
+						<td>{{ holiday.date }}</td>
+						<td>{{ holiday.wkday | brDate }}</td>
 					</tr>
 				</tbody>
 			</table>
